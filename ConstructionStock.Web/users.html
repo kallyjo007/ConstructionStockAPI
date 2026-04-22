@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="items.html">Items</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="alerts.html">Alerts <span id="alertCount" class="badge badge-danger" style="display: none;">0</span></a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="suppliers.html">Suppliers</a></li>
+            <li><a href="users.html" class="active">Users</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Site Users</h1>
+            <p class="text-secondary">Authorized personnel for this construction site</p>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- Loaded by users.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/users.js"></script>
+</body>
+</html>

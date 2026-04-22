@@ -24,6 +24,7 @@ public class ItemsController : ControllerBase
     private int GetSiteId() => int.Parse(User.FindFirstValue("SiteId")!);
 
     [HttpGet]
+    [Authorize(Roles = "StockManager,Storekeeper")]
     public async Task<IActionResult> GetItems()
     {
         var siteId = GetSiteId();

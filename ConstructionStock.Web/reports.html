@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="items.html">Items</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="alerts.html">Alerts <span id="alertCount" class="badge badge-danger" style="display: none;">0</span></a></li>
+            <li><a href="reports.html" class="active">Reports</a></li>
+            <li><a href="suppliers.html">Suppliers</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header class="flex-between">
+            <div>
+                <h1>Daily Reports</h1>
+                <p class="text-secondary">Generate and export daily stock summaries</p>
+            </div>
+            <div class="flex-between" style="gap: 1rem;">
+                <input type="date" id="reportDate" class="form-control" style="width: auto;">
+                <button id="exportPdfBtn" class="btn btn-primary">Export PDF</button>
+            </div>
+        </header>
+
+        <div class="stats-grid mt-4">
+            <div class="stat-card">
+                <h3>Total IN</h3>
+                <div id="totalIn" class="value" style="color: var(--success-color);">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total OUT</h3>
+                <div id="totalOut" class="value" style="color: var(--warning-color);">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Transactions</h3>
+                <div id="txCount" class="value">0</div>
+            </div>
+        </div>
+
+        <section>
+            <h2>Day Summary</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Recorded By</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody">
+                        <!-- Loaded by reports.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html" class="active">Dashboard</a></li>
+            <li><a href="items.html">Items</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="alerts.html">Alerts <span id="alertCount" class="badge badge-danger" style="display: none;">0</span></a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="suppliers.html">Suppliers</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header class="flex-between">
+            <div>
+                <h1 id="siteNameHeader">Site Dashboard</h1>
+                <p id="userNameHeader">Welcome back, Stock Manager</p>
+            </div>
+            <div class="text-right">
+                <span id="currentDate" class="text-secondary"></span>
+            </div>
+        </header>
+
+        <div class="stats-grid mt-4">
+            <div class="stat-card">
+                <h3>Total Items</h3>
+                <div id="totalItems" class="value">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Low Stock Items</h3>
+                <div id="lowStockCount" class="value" style="color: var(--danger-color);">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Alerts</h3>
+                <div id="activeAlerts" class="value" style="color: var(--warning-color);">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Site</h3>
+                <div id="siteLocation" class="value" style="font-size: 1.1rem; color: var(--primary-color);">...</div>
+            </div>
+        </div>
+
+        <section>
+            <div class="flex-between">
+                <h2>Current Stock Levels</h2>
+                <a href="items.html" class="btn btn-secondary">Manage Items</a>
+            </div>
+            
+            <div class="table-container">
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Unit</th>
+                            <th>Current Qty</th>
+                            <th>Min Qty</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody">
+                        <!-- Loaded by dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
