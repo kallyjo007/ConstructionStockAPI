@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storekeeper Dashboard - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="storekeeper.html" class="active">Dashboard</a></li>
+            <li><a href="my-transactions.html">My Records</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1 id="siteNameHeader">Storekeeper Dashboard</h1>
+            <p id="userNameHeader">Welcome back</p>
+        </header>
+
+        <section class="mt-4">
+            <div class="auth-card" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="text-center">Record Transaction</h2>
+                <form id="recordForm" class="mt-4">
+                    <div class="form-group">
+                        <label for="itemId">Item</label>
+                        <select id="itemId" required>
+                            <option value="">Select an item...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Transaction Type</label>
+                        <div style="display: flex; gap: 1rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="transactionType" value="IN" checked style="width: auto;"> IN (Restock)
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="radio" name="transactionType" value="OUT" style="width: auto;"> OUT (Usage)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="supplierGroup">
+                        <label for="supplierId">Supplier</label>
+                        <select id="supplierId">
+                            <option value="">Select a supplier...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" min="1" required placeholder="Enter quantity">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="remarks">Remarks (Optional)</label>
+                        <textarea id="remarks" rows="2" placeholder="Any notes..."></textarea>
+                    </div>
+
+                    <div id="formMessage" style="padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none;"></div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Record Movement</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="mt-4">
+            <div class="flex-between">
+                <h2>My Recent Records</h2>
+                <a href="my-transactions.html" class="btn btn-secondary">View All</a>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTableBody">
+                        <!-- Loaded by storekeeper.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/storekeeper.js"></script>
+</body>
+</html>

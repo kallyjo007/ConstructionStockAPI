@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="items.html">Items</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="alerts.html">Alerts <span id="alertCount" class="badge badge-danger" style="display: none;">0</span></a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="suppliers.html" class="active">Suppliers</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header class="flex-between">
+            <div>
+                <h1>Suppliers Directory</h1>
+                <p class="text-secondary">Manage material providers and contact information</p>
+            </div>
+            <button onclick="openSupplierModal()" class="btn btn-primary">+ Add New Supplier</button>
+        </header>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supplier Name</th>
+                        <th>Contact Person</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="suppliersTableBody">
+                    <!-- Loaded by suppliers.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Supplier Modal -->
+    <div id="supplierModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="auth-card" style="width: 500px;">
+            <h2 id="modalTitle">Add New Supplier</h2>
+            <form id="supplierForm" class="mt-4">
+                <input type="hidden" id="editSupplierId">
+                <div class="form-group">
+                    <label for="supplierName">Supplier Name</label>
+                    <input type="text" id="supplierName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPerson">Contact Person</label>
+                    <input type="text" id="contactPerson">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email">
+                </div>
+                <div class="flex-between mt-4">
+                    <button type="button" onclick="closeSupplierModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/suppliers.js"></script>
+</body>
+</html>

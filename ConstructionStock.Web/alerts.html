@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Alerts - Construction Stock</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/guard.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-brand">Construction Stock</div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="items.html">Items</a></li>
+            <li><a href="transactions.html">Transactions</a></li>
+            <li><a href="alerts.html" class="active">Alerts <span id="alertCount" class="badge badge-danger" style="display: none;">0</span></a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="suppliers.html">Suppliers</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Low Stock Alerts</h1>
+            <p class="text-secondary">Unresolved alerts for items that hit the minimum threshold</p>
+        </header>
+
+        <div id="noAlertsMessage" style="display: none;" class="text-center mt-4">
+            <div class="stat-card">
+                <p>No active alerts. All stock levels are currently above minimum thresholds.</p>
+            </div>
+        </div>
+
+        <div class="table-container" id="alertsTableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Item Name</th>
+                        <th>Qty at Alert</th>
+                        <th>Min Required</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="alertsTableBody">
+                    <!-- Loaded by alerts.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/alerts.js"></script>
+</body>
+</html>

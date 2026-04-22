@@ -52,8 +52,9 @@ public class TransactionsController : ControllerBase
     }
 
     // ?? POST /api/transactions/record ????????????????????????
-    // Both roles can record — storekeeper scoped to their site
+    // Both roles can record â€“ storekeeper scoped to their site
     [HttpPost("record")]
+    [Authorize(Roles = "StockManager,Storekeeper")]
     public async Task<IActionResult> RecordTransaction([FromBody] RecordTransactionDto dto)
     {
         var userId = GetUserId();
@@ -93,7 +94,7 @@ public class TransactionsController : ControllerBase
         };
 
         _db.StockTransactions.Add(transaction);
-        await _db.SaveChangesAsync(); // trigger fires here — updates qty + raises alert
+        await _db.SaveChangesAsync(); // trigger fires here â€“ updates qty + raises alert
 
         return Ok(ApiResponse<object>.Ok(
             new { transactionId = transaction.TransactionId },
@@ -104,6 +105,7 @@ public class TransactionsController : ControllerBase
     // Stock Manager sees full site log
     // Storekeeper sees only their own records
     [HttpGet("log")]
+    [Authorize(Roles = "StockManager,Storekeeper")]
     public async Task<IActionResult> GetTransactionLog()
     {
         var userId = GetUserId();
@@ -142,6 +144,7 @@ public class TransactionsController : ControllerBase
     // ?? GET /api/transactions/items ???????????????????????????
     // Returns items for the dropdown when recording a transaction
     [HttpGet("items")]
+    [Authorize(Roles = "StockManager,Storekeeper")]
     public async Task<IActionResult> GetItems()
     {
         var siteId = GetSiteId();
@@ -158,6 +161,7 @@ public class TransactionsController : ControllerBase
     // ?? GET /api/transactions/suppliers ??????????????????????
     // Returns active suppliers for the IN transaction dropdown
     [HttpGet("suppliers")]
+    [Authorize(Roles = "StockManager,Storekeeper")]
     public async Task<IActionResult> GetSuppliers()
     {
         var suppliers = await _db.Suppliers
