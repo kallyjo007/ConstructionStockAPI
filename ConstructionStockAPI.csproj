@@ -18,6 +18,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="QuestPDF" Version="2026.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConstructionStockAPI.Tests\**\*.cs" />
+    <EmbeddedResource Remove="ConstructionStockAPI.Tests\**\*" />
+    <Content Remove="ConstructionStockAPI.Tests\**\*" />
+    <None Remove="ConstructionStockAPI.Tests\**\*" />
   </ItemGroup>
 
 </Project>

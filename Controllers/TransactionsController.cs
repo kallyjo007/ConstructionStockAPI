@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using ConstructionStockAPI.Data;
 using ConstructionStockAPI.DTOs;
+using ConstructionStockAPI.Helpers;
 using ConstructionStockAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,7 @@ public class TransactionsController : ControllerBase
             .OrderBy(i => i.ItemName)
             .ToListAsync();
 
-        return Ok(items);
+        return Ok(ApiResponse<List<StockStatusDto>>.Ok(items));
     }
 
     // ?? POST /api/transactions/record ????????????????????????
@@ -60,11 +61,11 @@ public class TransactionsController : ControllerBase
 
         // Validate transaction type
         if (dto.TransactionType != "IN" && dto.TransactionType != "OUT")
-            return BadRequest(new { message = "TransactionType must be IN or OUT." });
+            return BadRequest(ApiResponse<object>.Fail("TransactionType must be IN or OUT."));
 
         // Supplier required for IN
         if (dto.TransactionType == "IN" && dto.SupplierId == null)
-            return BadRequest(new { message = "SupplierId is required for Stock IN." });
+            return BadRequest(ApiResponse<object>.Fail("SupplierId is required for Stock IN."));
 
         // Fetch item and verify it belongs to this site
         var item = await _db.Items
@@ -73,11 +74,11 @@ public class TransactionsController : ControllerBase
                                    && i.IsActive == true);
 
         if (item == null)
-            return NotFound(new { message = "Item not found on your site." });
+            return NotFound(ApiResponse<object>.Fail("Item not found on your site."));
 
         // Prevent negative stock
         if (dto.TransactionType == "OUT" && dto.Quantity > item.CurrentQuantity)
-            return BadRequest(new { message = $"Insufficient stock. Current quantity is {item.CurrentQuantity}." });
+            return BadRequest(ApiResponse<object>.Fail($"Insufficient stock. Current quantity is {item.CurrentQuantity}."));
 
         var transaction = new StockTransaction
         {
@@ -94,7 +95,9 @@ public class TransactionsController : ControllerBase
         _db.StockTransactions.Add(transaction);
         await _db.SaveChangesAsync(); // trigger fires here — updates qty + raises alert
 
-        return Ok(new { message = $"Stock {dto.TransactionType} recorded successfully.", transactionId = transaction.TransactionId });
+        return Ok(ApiResponse<object>.Ok(
+            new { transactionId = transaction.TransactionId },
+            $"Stock {dto.TransactionType} recorded successfully."));
     }
 
     // ?? GET /api/transactions/log ?????????????????????????????
@@ -133,7 +136,7 @@ public class TransactionsController : ControllerBase
             })
             .ToListAsync();
 
-        return Ok(log);
+        return Ok(ApiResponse<List<TransactionResponseDto>>.Ok(log));
     }
 
     // ?? GET /api/transactions/items ???????????????????????????
@@ -149,7 +152,7 @@ public class TransactionsController : ControllerBase
             .OrderBy(i => i.ItemName)
             .ToListAsync();
 
-        return Ok(items);
+        return Ok(ApiResponse<object>.Ok(items));
     }
 
     // ?? GET /api/transactions/suppliers ??????????????????????
@@ -163,6 +166,6 @@ public class TransactionsController : ControllerBase
             .OrderBy(s => s.SupplierName)
             .ToListAsync();
 
-        return Ok(suppliers);
+        return Ok(ApiResponse<object>.Ok(suppliers));
     }
 }

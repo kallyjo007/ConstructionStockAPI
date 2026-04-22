@@ -1,5 +1,6 @@
 using ConstructionStockAPI.Data;
 using ConstructionStockAPI.DTOs;
+using ConstructionStockAPI.Helpers;
 using ConstructionStockAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,11 +29,11 @@ public class AuthController : ControllerBase
                                    && u.IsActive  == true);
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            return Unauthorized(new { message = "Invalid username or password." });
+            return Unauthorized(ApiResponse<object>.Fail("Invalid username or password."));
 
         var token = _tokenService.GenerateToken(user, user.Site.SiteName);
 
-        return Ok(new LoginResponseDto
+        var response = new LoginResponseDto
         {
             Token    = token,
             FullName = user.FullName,
@@ -40,12 +41,8 @@ public class AuthController : ControllerBase
             SiteId   = user.SiteId,
             UserId   = user.UserId,
             SiteName = user.Site.SiteName
-        });
-    }
+        };
 
-    [HttpGet("hashpassword/{password}")]
-    public IActionResult HashPassword(string password)
-    {
-        return Ok(new { hash = BCrypt.Net.BCrypt.HashPassword(password) });
+        return Ok(ApiResponse<LoginResponseDto>.Ok(response, "Login successful."));
     }
 }

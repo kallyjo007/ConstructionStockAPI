@@ -1,11 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace ConstructionStockAPI.DTOs;
 
 public class RecordTransactionDto
 {
+    [Range(1, int.MaxValue)]
     public int ItemId { get; set; }
+
+    [Range(1, int.MaxValue)]
     public int Quantity { get; set; }
+
+    [Required]
     public string TransactionType { get; set; } = string.Empty; // "IN" or "OUT"
+
     public int? SupplierId { get; set; } // only for IN
+
+    [MaxLength(500)]
     public string? Remarks { get; set; }
 }
 

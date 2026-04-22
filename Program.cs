@@ -1,18 +1,33 @@
 using System.Text;
 using ConstructionStockAPI.Data;
+using ConstructionStockAPI.Helpers;
+using ConstructionStockAPI.Middleware;
 using ConstructionStockAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        return new BadRequestObjectResult(ApiResponse<object>.Fail("Validation failed."))
+        {
+            Value = ApiResponse<object>.Fail("Validation failed.")
+        };
+    };
+});
 
 builder.Services.AddDbContext<ConstructionStockDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<AlertService>();
+builder.Services.AddScoped<ReportService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -43,6 +58,7 @@ var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
