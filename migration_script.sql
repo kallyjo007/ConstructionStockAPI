@@ -157,6 +157,13 @@ BEGIN
 END
 GO
 
--- 4. Initial Seed (Wait to add your actual Admin here)
--- INSERT INTO Sites (SiteName, Location) VALUES ('Main Office', 'Kigali HQ');
--- INSERT INTO Users (Username, PasswordHash, FullName, Role, SiteId) VALUES ('admin', '...', 'System Admin', 'Admin', 1);
+-- 4. Initial Seed
+-- IMPORTANT: Run this to create your first Admin so you can log in on Render!
+-- Replace 'PASTE_HASH_HERE' with a BCrypt hash from your local database or 'Hasher' tool.
+
+/*
+INSERT INTO Sites (SiteName, Location) VALUES ('Administrator Hub', 'Cloud HQ');
+
+INSERT INTO Users (Username, PasswordHash, FullName, Role, SiteId) 
+VALUES ('admin', 'PASTE_HASH_HERE', 'System Administrator', 'Admin', 1);
+*/
