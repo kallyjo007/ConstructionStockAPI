@@ -21,6 +21,45 @@ public class TransactionsController : ControllerBase
         _db = db;
     }
 
+    // PUT /api/transactions/{id}/approve
+    // StockManager approves a previously recorded IN transaction
+    [HttpPut("{id:int}/approve")]
+    [Authorize(Roles = "StockManager")]
+    public async Task<IActionResult> ApproveTransaction(int id)
+    {
+        var siteId = GetSiteId();
+        var approverId = GetUserId();
+
+        var tx = await _db.StockTransactions
+            .Include(t => t.Item)
+            .FirstOrDefaultAsync(t => t.TransactionId == id && t.SiteId == siteId);
+
+        if (tx == null)
+            return NotFound(ApiResponse<object>.Fail("Transaction not found."));
+
+        if (tx.TransactionType != "IN")
+            return BadRequest(ApiResponse<object>.Fail("Only IN transactions can be approved."));
+
+        if (tx.IsApproved)
+            return BadRequest(ApiResponse<object>.Fail("Transaction is already approved."));
+
+        tx.IsApproved = true;
+        tx.ApprovedByUserId = approverId;
+        tx.ApprovedAt = DateTime.Now;
+
+        // Persist approval — triggers or application logic should handle adjusting item quantities
+        await _db.SaveChangesAsync();
+
+        // Manual stock update since the trigger only fires on INSERT
+        if (tx.TransactionType == "IN")
+        {
+            tx.Item.CurrentQuantity += tx.Quantity;
+            await _db.SaveChangesAsync();
+        }
+
+        return Ok(ApiResponse<object>.Ok(new { transactionId = tx.TransactionId }, "Transaction approved."));
+    }
+
     // ?? helpers ??????????????????????????????????????????????
     private int GetUserId()  => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     private int GetSiteId()  => int.Parse(User.FindFirstValue("SiteId")!);
@@ -90,11 +129,26 @@ public class TransactionsController : ControllerBase
             TransactionType  = dto.TransactionType,
             Quantity         = dto.Quantity,
             Remarks          = dto.Remarks,
-            TransactionDate  = DateTime.Now
+            TransactionDate  = DateTime.Now,
+            IsApproved       = dto.TransactionType == "IN" && GetRole() == "StockManager" ? true : false,
+            ApprovedByUserId = dto.TransactionType == "IN" && GetRole() == "StockManager" ? userId : null,
+            ApprovedAt       = dto.TransactionType == "IN" && GetRole() == "StockManager" ? DateTime.Now : null
         };
 
         _db.StockTransactions.Add(transaction);
-        await _db.SaveChangesAsync(); // trigger fires here – updates qty + raises alert
+        
+        // Only update CurrentQuantity immediately if it's an OUT transaction 
+        // OR an immediately approved IN transaction (recorded by Manager)
+        if (transaction.TransactionType == "OUT")
+        {
+            item.CurrentQuantity -= transaction.Quantity;
+        }
+        else if (transaction.TransactionType == "IN" && transaction.IsApproved)
+        {
+            item.CurrentQuantity += transaction.Quantity;
+        }
+
+        await _db.SaveChangesAsync(); // trigger fires here – raises alert if needed
 
         return Ok(ApiResponse<object>.Ok(
             new { transactionId = transaction.TransactionId },
@@ -116,6 +170,7 @@ public class TransactionsController : ControllerBase
             .Include(t => t.Item)
             .Include(t => t.RecordedByUser)
             .Include(t => t.Supplier)
+            .Include(t => t.ApprovedByUser)
             .Where(t => t.SiteId == siteId)
             .AsQueryable();
 
@@ -134,6 +189,9 @@ public class TransactionsController : ControllerBase
                 SupplierName    = t.Supplier != null ? t.Supplier.SupplierName : null,
                 RecordedBy      = t.RecordedByUser.FullName,
                 Remarks         = t.Remarks,
+                IsApproved      = t.IsApproved,
+                ApprovedBy      = t.ApprovedByUserId != null ? _db.Users.FirstOrDefault(u => u.UserId == t.ApprovedByUserId)!.FullName : null,
+                ApprovedAt      = t.ApprovedAt,
                 TransactionDate = t.TransactionDate
             })
             .ToListAsync();

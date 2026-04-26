@@ -3,19 +3,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateAlertBadge();
 });
 
-async function loadUsers() {
-    try {
-        const response = await apiFetch('/users');
-        if (response.success) {
-            renderUsers(response.data);
-        }
-    } catch (error) {
-        console.error('Failed to load users:', error);
-    }
-}
+// Admin functions migrated to admin.js
 
 function renderUsers(users) {
     const tbody = document.getElementById('usersTableBody');
+    const role = localStorage.getItem('role');
     tbody.innerHTML = '';
 
     users.forEach(u => {
@@ -23,11 +15,14 @@ function renderUsers(users) {
         const roleClass = u.role === 'StockManager' ? 'badge-info' : 'badge-secondary';
         const statusClass = u.isActive ? 'badge-success' : 'badge-danger';
         
+        let actions = '';
+
         tr.innerHTML = `
             <td><strong>${u.fullName}</strong></td>
             <td>${u.username}</td>
             <td><span class="badge ${roleClass}">${u.role}</span></td>
             <td><span class="badge ${statusClass}">${u.isActive ? 'Active' : 'Inactive'}</span></td>
+            <td>${actions}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -38,8 +33,10 @@ async function updateAlertBadge() {
         const response = await apiFetch('/alerts');
         if (response.success && response.data.length > 0) {
             const badge = document.getElementById('alertCount');
-            badge.textContent = response.data.length;
-            badge.style.display = 'inline-flex';
+            if (badge) {
+                badge.textContent = response.data.length;
+                badge.style.display = 'inline-flex';
+            }
         }
     } catch (error) {}
 }

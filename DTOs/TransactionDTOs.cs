@@ -17,6 +17,9 @@ public class RecordTransactionDto
 
     [MaxLength(500)]
     public string? Remarks { get; set; }
+
+    // When Storekeeper records IN, it will be unapproved until StockManager approves
+    public bool? ApproveImmediately { get; set; } = null;
 }
 
 public class TransactionResponseDto
@@ -28,6 +31,9 @@ public class TransactionResponseDto
     public string? SupplierName { get; set; }
     public string RecordedBy { get; set; } = string.Empty;
     public string? Remarks { get; set; }
+    public bool IsApproved { get; set; }
+    public string? ApprovedBy { get; set; }
+    public DateTime? ApprovedAt { get; set; }
     public DateTime TransactionDate { get; set; }
 }
 

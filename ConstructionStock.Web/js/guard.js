@@ -13,6 +13,8 @@
     if (token && (currentPage === 'index.html' || currentPage === '')) {
         if (role === 'StockManager') {
             window.location.href = 'dashboard.html';
+        } else if (role === 'Admin') {
+            window.location.href = 'admin.html';
         } else if (role === 'Storekeeper') {
             window.location.href = 'storekeeper.html';
         }
@@ -20,14 +22,19 @@
     }
 
     // Role-based protection
-    const managerPages = ['dashboard.html', 'transactions.html', 'reports.html', 'suppliers.html', 'users.html'];
+    const managerPages = ['dashboard.html', 'items.html', 'transactions.html', 'reports.html', 'suppliers.html', 'users.html', 'alerts.html'];
     const storekeeperPages = ['storekeeper.html', 'my-transactions.html'];
+    const adminPages = ['admin.html'];
 
     if (role === 'Storekeeper' && managerPages.includes(currentPage)) {
         window.location.href = 'storekeeper.html';
     }
 
-    if (role === 'StockManager' && storekeeperPages.includes(currentPage)) {
+    if (role === 'Admin' && (storekeeperPages.includes(currentPage) || managerPages.includes(currentPage))) {
+        window.location.href = 'admin.html';
+    }
+
+    if (role === 'StockManager' && (storekeeperPages.includes(currentPage) || adminPages.includes(currentPage))) {
         window.location.href = 'dashboard.html';
     }
 })();

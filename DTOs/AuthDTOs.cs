@@ -10,6 +10,9 @@ public class LoginRequestDto
     [Required]
     [MinLength(6)]
     public string Password { get; set; } = string.Empty;
+
+    [Required]
+    public string Role { get; set; } = string.Empty;
 }
 
 public class LoginResponseDto

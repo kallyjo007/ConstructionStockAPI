@@ -37,9 +37,26 @@ function renderTransactionTable(transactions) {
             <td>${tx.recordedBy}</td>
             <td>${tx.supplierName || '-'}</td>
             <td>${tx.remarks || ''}</td>
+            <td>
+                ${tx.transactionType === 'IN' && !tx.isApproved ? `<button class="btn btn-sm btn-primary" onclick="approveTransaction(${tx.transactionId})">Approve</button>` : (tx.isApproved ? `Approved${tx.approvedBy ? ' by ' + tx.approvedBy : ''}` : '')}
+            </td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+async function approveTransaction(id) {
+    if (!confirm('Are you sure you want to approve this stock IN transaction?')) return;
+    
+    try {
+        const response = await apiFetch(`/transactions/${id}/approve`, 'PUT');
+        if (response.success) {
+            await loadTransactions();
+            updateAlertBadge();
+        }
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function updateAlertBadge() {
@@ -47,8 +64,10 @@ async function updateAlertBadge() {
         const response = await apiFetch('/alerts');
         if (response.success && response.data.length > 0) {
             const badge = document.getElementById('alertCount');
-            badge.textContent = response.data.length;
-            badge.style.display = 'inline-flex';
+            if (badge) {
+                badge.textContent = response.data.length;
+                badge.style.display = 'inline-flex';
+            }
         }
     } catch (error) {}
 }

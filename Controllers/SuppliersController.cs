@@ -10,7 +10,7 @@ namespace ConstructionStockAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "StockManager")]
+[Authorize(Roles = "StockManager,Admin")]
 public class SuppliersController : ControllerBase
 {
     private readonly ConstructionStockDbContext _db;

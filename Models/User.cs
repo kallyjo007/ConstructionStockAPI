@@ -38,4 +38,7 @@ public partial class User
 
     [InverseProperty("RecordedByUser")]
     public virtual ICollection<StockTransaction> StockTransactions { get; set; } = new List<StockTransaction>();
+
+    [InverseProperty("ApprovedByUser")]
+    public virtual ICollection<StockTransaction> ApprovedTransactions { get; set; } = new List<StockTransaction>();
 }

@@ -28,3 +28,27 @@ public class StockSummaryDto
     public int MinimumQuantity { get; set; }
     public string StockStatus { get; set; } = string.Empty;
 }
+
+public class AdminReportDto
+{
+    public DateOnly Date { get; set; }
+    public int ActiveSitesCount { get; set; }
+    public int ActiveUsersCount { get; set; }
+    public List<SiteActivityDto> ActiveSites { get; set; } = [];
+    public List<UserActivityDto> ActiveUsers { get; set; } = [];
+}
+
+public class SiteActivityDto
+{
+    public string SiteName { get; set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
+    public int TransactionCount { get; set; }
+}
+
+public class UserActivityDto
+{
+    public string FullName { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public string SiteName { get; set; } = string.Empty;
+    public int TransactionCount { get; set; }
+}

@@ -49,6 +49,49 @@ public class ReportService
         };
     }
 
+    public async Task<AdminReportDto> GetAdminReportAsync(DateOnly date)
+    {
+        var start = date.ToDateTime(TimeOnly.MinValue);
+        var end = start.AddDays(1);
+
+        var transactions = await _db.StockTransactions
+            .Include(t => t.Site)
+            .Include(t => t.RecordedByUser)
+            .ThenInclude(u => u.Site)
+            .Where(t => t.TransactionDate >= start && t.TransactionDate < end)
+            .ToListAsync();
+
+        var sites = transactions
+            .GroupBy(t => t.Site)
+            .Select(g => new SiteActivityDto
+            {
+                SiteName = g.Key.SiteName,
+                Location = g.Key.Location,
+                TransactionCount = g.Count()
+            })
+            .ToList();
+
+        var users = transactions
+            .GroupBy(t => t.RecordedByUser)
+            .Select(g => new UserActivityDto
+            {
+                FullName = g.Key.FullName,
+                Role = g.Key.Role,
+                SiteName = g.Key.Site.SiteName,
+                TransactionCount = g.Count()
+            })
+            .ToList();
+
+        return new AdminReportDto
+        {
+            Date = date,
+            ActiveSitesCount = sites.Count,
+            ActiveUsersCount = users.Count,
+            ActiveSites = sites,
+            ActiveUsers = users
+        };
+    }
+
     public async Task<List<StockSummaryDto>> GetStockSummaryAsync(int siteId)
     {
         return await _db.Items

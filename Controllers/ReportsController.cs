@@ -8,7 +8,7 @@ namespace ConstructionStockAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "StockManager")]
+[Authorize(Roles = "StockManager,Admin")]
 public class ReportsController : ControllerBase
 {
     private readonly ReportService _reportService;
@@ -21,6 +21,7 @@ public class ReportsController : ControllerBase
     private int GetSiteId() => int.Parse(User.FindFirstValue("SiteId")!);
 
     [HttpGet("daily")]
+    [Authorize(Roles = "StockManager")]
     public async Task<IActionResult> GetDailyReport([FromQuery] DateOnly? date)
     {
         var reportDate = date ?? DateOnly.FromDateTime(DateTime.Today);
@@ -29,6 +30,7 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("daily/export")]
+    [Authorize(Roles = "StockManager")]
     public async Task<IActionResult> ExportDailyReport([FromQuery] DateOnly? date)
     {
         var reportDate = date ?? DateOnly.FromDateTime(DateTime.Today);
@@ -40,9 +42,19 @@ public class ReportsController : ControllerBase
     }
 
     [HttpGet("stock-summary")]
+    [Authorize(Roles = "StockManager")]
     public async Task<IActionResult> GetStockSummary()
     {
         var summary = await _reportService.GetStockSummaryAsync(GetSiteId());
         return Ok(ApiResponse<object>.Ok(summary));
+    }
+
+    [HttpGet("admin")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAdminReport([FromQuery] DateOnly? date)
+    {
+        var reportDate = date ?? DateOnly.FromDateTime(DateTime.Today);
+        var report = await _reportService.GetAdminReportAsync(reportDate);
+        return Ok(ApiResponse<object>.Ok(report));
     }
 }

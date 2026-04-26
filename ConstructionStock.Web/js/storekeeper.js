@@ -108,16 +108,22 @@ async function loadRecentTransactions() {
             recent.forEach(tx => {
                 const tr = document.createElement('tr');
                 const typeClass = tx.transactionType === 'IN' ? 'badge-success' : 'badge-warning';
-                const time = new Date(tx.transactionDate).toLocaleTimeString('en-GB', {
+                const statusClass = tx.isApproved ? 'badge-success' : 'badge-danger';
+                const statusText = tx.isApproved ? 'Approved' : 'Pending Approval';
+
+                const date = new Date(tx.transactionDate).toLocaleString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
                     hour: '2-digit',
                     minute: '2-digit'
                 });
 
                 tr.innerHTML = `
-                    <td>${time}</td>
+                    <td>${date}</td>
                     <td><span class="badge ${typeClass}">${tx.transactionType}</span></td>
                     <td>${tx.itemName}</td>
                     <td>${tx.quantity}</td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
                     <td>${tx.remarks || ''}</td>
                 `;
                 tbody.appendChild(tr);

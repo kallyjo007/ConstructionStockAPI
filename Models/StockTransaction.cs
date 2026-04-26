@@ -31,6 +31,17 @@ public partial class StockTransaction
     [StringLength(500)]
     public string? Remarks { get; set; }
 
+    public bool IsApproved { get; set; }
+
+    public int? ApprovedByUserId { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? ApprovedAt { get; set; }
+
+    [ForeignKey("ApprovedByUserId")]
+    [InverseProperty("ApprovedTransactions")]
+    public virtual User? ApprovedByUser { get; set; }
+
     [Column(TypeName = "datetime")]
     public DateTime TransactionDate { get; set; }
 

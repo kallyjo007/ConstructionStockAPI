@@ -1,18 +1,18 @@
-async function login(username, password) {
+async function login(username, password, role) {
     try {
-        const response = await apiFetch('/auth/login', 'POST', { username, password });
+        const response = await apiFetch('/auth/login', 'POST', { username, password, role });
         
         if (response.success) {
-            const { token, role, siteId, userId, fullName, siteName } = response.data;
+            const { token, role: returnedRole, siteId, userId, fullName, siteName } = response.data;
             
             localStorage.setItem('token', token);
-            localStorage.setItem('role', role);
+            localStorage.setItem('role', returnedRole);
             localStorage.setItem('siteId', siteId);
             localStorage.setItem('userId', userId);
             localStorage.setItem('fullName', fullName);
             localStorage.setItem('siteName', siteName);
             
-            return { success: true, role };
+            return { success: true, role: returnedRole };
         }
         return { success: false, message: response.message };
     } catch (error) {

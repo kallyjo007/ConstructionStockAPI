@@ -1,0 +1,9 @@
+bin/
+obj/
+.gemini/
+.git/
+.vscode/
+.vs/
+*.user
+*.suo
+appsettings.Development.json

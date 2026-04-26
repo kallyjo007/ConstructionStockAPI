@@ -26,10 +26,11 @@ public class AuthController : ControllerBase
         var user = await _db.Users
             .Include(u => u.Site)
             .FirstOrDefaultAsync(u => u.Username == request.Username
+                                   && u.Role == request.Role
                                    && u.IsActive  == true);
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            return Unauthorized(ApiResponse<object>.Fail("Invalid username or password."));
+            return Unauthorized(ApiResponse<object>.Fail("Invalid credentials or role mismatch."));
 
         var token = _tokenService.GenerateToken(user, user.Site.SiteName);
 
