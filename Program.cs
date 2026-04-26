@@ -57,6 +57,17 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
+
+var webPath = Path.Combine(app.Environment.ContentRootPath, "ConstructionStock.Web");
+app.UseDefaultFiles(new DefaultFilesOptions { 
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webPath),
+    RequestPath = "" 
+});
+app.UseStaticFiles(new StaticFileOptions { 
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(webPath),
+    RequestPath = "" 
+});
+
 app.UseHttpsRedirection();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();
