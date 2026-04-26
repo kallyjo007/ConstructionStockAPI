@@ -28,4 +28,10 @@
     <None Remove="ConstructionStockAPI.Tests\**\*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="ConstructionStock.Web\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
